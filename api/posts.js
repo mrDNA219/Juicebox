@@ -5,18 +5,15 @@ const {requireUser} = require('./utils');
 
 postsRouter.post('/', requireUser, async (req, res, next) => {
   const { title, content, tags = "" } = req.body;
-
+  const {userId} = req.user.id
   const tagArr = tags.trim().split(/\s+/)
-  const postData = {};
+  const {postData} = {}
 
   if (tagArr.length) {
     postData.tags = tagArr;
   }
   try {
-    
-    postData.push(req.user.id, title, content, tagArr);
-    
-    const post = await createPost(postData);
+    const post = await createPost({userId, title, content, tagArr});
     res.send(post);
   } catch ({ name, message }) {
     next({ name, message });
